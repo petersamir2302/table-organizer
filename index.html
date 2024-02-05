@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accordion Component</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+  </style>
+</head>
+
+<body>
+  <div id="dataAccordion" class="accordion">
+    <!-- Accordion items will be dynamically created here -->
+  </div>
+
+  <!-- Bootstrap 5 JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+  <script src="./index.js"></script>
+  <script>
+    // Data for the accordion
+    let mockData = [
+      { date: '2023-01-01', firstName: 'John', lastName: 'Doe' },
+      { date: '2023-05-15', firstName: 'Jane', lastName: 'Smith' },
+      { date: '2022-09-30', firstName: 'Alice', lastName: 'Johnson' },
+      { date: '2021-12-25', firstName: 'Bob', lastName: 'Brown' },
+      { date: '2023-08-20', firstName: 'Michael', lastName: 'Lee' },
+      { date: '2020-06-10', firstName: 'Emily', lastName: 'Taylor' }
+      // { date: '2019-01-01', firstName: 'John', lastName: 'Doe' },
+      // { date: '2014-05-15', firstName: 'Jane', lastName: 'Smith' },
+      // { date: '2022-09-30', firstName: 'Alice', lastName: 'Johnson' },
+      // { date: '2021-12-25', firstName: 'Bob', lastName: 'Brown' },
+      // { date: '2023-08-20', firstName: 'Michael', lastName: 'Lee' },
+      // { date: '2020-06-10', firstName: 'Emily', lastName: 'Taylor' }
+    ];
+    mockData = groupDataByYear(mockData);
+
+    // Function to render accordion items
+    function renderAccordion() {
+      const accordionContainer = document.getElementById('dataAccordion');
+
+      mockData.forEach((group, index) => {
+        const accordionItem = document.createElement('div');
+        accordionItem.className = 'accordion-item';
+
+        const accordionHeader = document.createElement('h2');
+        accordionHeader.className = 'accordion-header';
+        accordionHeader.innerHTML = `
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}"
+            aria-expanded="true" aria-controls="collapse${index}">
+            ${group.year}
+          </button>
+        `;
+
+        const accordionCollapse = document.createElement('div');
+        accordionCollapse.id = `collapse${index}`;
+        accordionCollapse.className = 'accordion-collapse collapse';
+        accordionCollapse.dataset.bsParent = '#dataAccordion';
+
+        const accordionBody = document.createElement('div');
+        accordionBody.className = 'accordion-body';
+        let rowsHtml = '';
+        group.rows.forEach(row => {
+          rowsHtml += `
+          <tr >
+                  <td>${row.date}</td>
+                  <td>${row.firstName}</td>
+                  <td>${row.lastName}</td>
+                </tr>
+          `;
+        });
+        accordionBody.innerHTML += `
+        <table class="table table-hover">
+              <thead class="table-dark">
+                <tr>
+                  <th>Date</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rowsHtml}
+        </tbody>
+        </table>
+          `;
+
+        accordionCollapse.appendChild(accordionBody);
+        accordionItem.appendChild(accordionHeader);
+        accordionItem.appendChild(accordionCollapse);
+        accordionContainer.appendChild(accordionItem);
+      });
+    }
+
+    // Function to render accordion items
+    function renderNormalTable() {
+      const accordionContainer = document.getElementById('dataAccordion');
+      let rowsHtml = '';
+      mockData.forEach((row, index) => {
+        rowsHtml += `
+          <tr >
+                  <td>${row.date}</td>
+                  <td>${row.firstName}</td>
+                  <td>${row.lastName}</td>
+                </tr>
+          `;
+      });
+      accordionContainer.innerHTML += `
+        <table class="table table-hover">
+              <thead class="table-dark">
+                <tr>
+                  <th>Date</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rowsHtml}
+        </tbody>
+        </table>
+          `;
+
+    }
+
+    if (mockData[0]?.rows?.length > 0) {
+      // Render the accordion
+      renderAccordion();
+    } else {
+      renderNormalTable();
+    }
+  </script>
+</body>
+
+</html>
